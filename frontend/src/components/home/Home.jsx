@@ -73,7 +73,11 @@ const Home = () => {
             title: newTitle,
             text: newText
 
-        })
+        },
+        {
+            withCredentials: true,
+        }
+        )
 
         try {
             retriveData();
