@@ -26,13 +26,15 @@ const App = () => {
                     </li>
                     <li>
                         <Link to={`login`}>Login</Link>
+                    </li>  <li>
+                        <Link to={`signup`}>Signup</Link>
                     </li>
                 </ul>
             </nav>
 
 
 
-            <Router>
+        
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="chat" element={<Chat />} />
@@ -41,7 +43,7 @@ const App = () => {
 
                     <Route path="*" element={<Navigate to="/" replace={true} />} />
                 </Routes>
-            </Router>
+            
         </>
     )
 }
