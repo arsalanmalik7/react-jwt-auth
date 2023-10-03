@@ -2,8 +2,10 @@ import express from 'express'
 import { client } from './../../mongodb.mjs'
 import { ObjectId } from 'mongodb';
 
+
 const db = client.db('cruddb');
 const col = db.collection("posts");
+const userCollection = db.collection("usersCollection");
 
 let router = express.Router()
 
@@ -62,6 +64,31 @@ router.get('/post/:postId', async (req, res, next) => {
 })
 
 
+
+router.get(`/profile`, async (req, res, next) => {
+
+    try {
+
+        const result = await userCollection.findOne({ email: req.body.decoded.email });
+        console.log("result: ", result);
+
+        res.send({
+            message: "profile fetched",
+            data: {
+                isAdmin: result.isAdmin,
+                firstName: result.firstName,
+                lastName: result.lastName,
+                email: result.email,
+            }
+        })
+    } catch (error) {
+
+        console.log("error getting data mongodb: ", error);
+        res.status(500).send('server error, please try later');
+    }
+})
+
+
 router.put('/post/:postId', async (req, res, next) => {
     if (!ObjectId.isValid(req.params.postId)) {
         res.status(403).send(`Invalid post id`);
@@ -89,6 +116,10 @@ router.put('/post/:postId', async (req, res, next) => {
         res.status(500).send("Error finding post");
     }
 })
+
+
+
+
 router.delete(`/post/:postId`, async (req, res, next) => {
     if (!ObjectId.isValid(req.params.postId)) {
         res.status(403).send(`Invalid post id`);
@@ -107,7 +138,6 @@ router.delete(`/post/:postId`, async (req, res, next) => {
         console.log("error deleting mongodb: ", error);
         res.status(500).send('server error, please try later');
     }
-
 
 })
 export default router

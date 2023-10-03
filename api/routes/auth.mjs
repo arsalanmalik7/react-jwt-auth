@@ -47,6 +47,7 @@ router.post('/signup', async (req, res, next) => {
 
         if (!result) {
             const insertedUser = await usersCollection.insertOne({
+                isAdmin: false,
                 firstname: req.body.firstName,
                 lastName: req.body.lastName,
                 email: req.body.email.toLowerCase(),

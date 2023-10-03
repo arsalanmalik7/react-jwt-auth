@@ -7,6 +7,7 @@ import { Trash, Pencil } from 'react-bootstrap-icons';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/button';
+import { baseUrl } from '../../core';
 import axios from 'axios';
 
 
@@ -25,7 +26,7 @@ const Post = ({ eachPost, onDelete, onUpdate }) => {
 
 
     const instance = axios.create({
-        baseURL: "http://localhost:3001/api"
+        baseURL: `${baseUrl}/api`
     })
 
     const [deleteShow, deleteSetShow] = useState(false);

@@ -6,6 +6,7 @@ import axios from 'axios';
 import Post from '../posts/Post';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
+import { baseUrl } from '../../core';
 import './home.css';
 
 
@@ -39,7 +40,7 @@ const Home = () => {
     }
 
     const instance = axios.create({
-        baseURL: "http://localhost:3001/api"
+        baseURL: `${baseUrl}/api`
 
     })
 
@@ -49,7 +50,9 @@ const Home = () => {
     async function retriveData() {
 
         try {
-            const response = await instance.get(`/posts`)
+            const response = await instance.get(`/posts`, {
+                withCredentials: true
+            })
             setAllPosts(response.data)
         } catch (error) {
             console.log(error)
