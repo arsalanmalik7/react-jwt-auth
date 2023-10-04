@@ -48,7 +48,7 @@ router.post('/signup', async (req, res, next) => {
         if (!result) {
             const insertedUser = await usersCollection.insertOne({
                 isAdmin: false,
-                firstname: req.body.firstName,
+                firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 email: req.body.email.toLowerCase(),
                 password: hashPassword,
@@ -106,13 +106,19 @@ router.post('/login', async (req, res, next) => {
                 const expiresCookie = new Date();
                 expiresCookie.setHours(expiresCookie.getHours() + 1)
                 res.cookie('token', token, {
-                    httpOnly: true  ,
+                    httpOnly: true,
                     secure: true,
                     expires: new Date(Date.now() + 900000)
                 })
 
                 res.send({
-                    message: "Login Successful"
+                    message: "Login Successful",
+                    data: {
+                        isAdmin: result.isAdmin,
+                        firstName: result.firstName,
+                        lastName: result.lastName,
+                        email: req.body.email
+                    }
                 });
                 return;
             } else {
@@ -129,6 +135,10 @@ router.post('/login', async (req, res, next) => {
 
 })
 
+router.post('/logout', async (req, res, next) => {
+    res.clearCookie('token');
+    res.send({ message: "Logout Successful" });
+})
 
 
 export default router

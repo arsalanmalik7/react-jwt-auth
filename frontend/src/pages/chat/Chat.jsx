@@ -1,10 +1,11 @@
 import React from "react";
+import "./chat.css"
 
 const Chat = () =>{
     return(
         <>
-        <div>
-            <h1>CHAT APP</h1>
+        <div className="chat-container">
+            <h1 className="chat-heading">CHAT APP</h1>
         </div>
         </>
     )

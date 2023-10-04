@@ -1,10 +1,8 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import InputGroup from 'react-bootstrap/InputGroup';
 import { baseUrl } from "../../core";
 import axios from "axios";
+import "./signup.css"
 
 
 
@@ -15,10 +13,12 @@ const Signup = () => {
     const lastNameInputRef = useRef(null);
     const emailInputRef = useRef(null);
     const passwordInputRef = useRef(null);
-
+    const repeatPasswordInputRef = useRef(null);
     const [result, setResult] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
 
+
+    const [passwordErrorClass, setPasswordErrorClass] = useState("hidden");
 
     const instance = axios.create({
         baseURL: `${baseUrl}/api`
@@ -30,10 +30,14 @@ const Signup = () => {
 
         e.preventDefault();
 
-        console.log("firstName: ", firstNameInputRef.current.value);
-        console.log("lastName: ", lastNameInputRef.current.value);
-        console.log("email: ", emailInputRef.current.value);
-        console.log("password: ", passwordInputRef.current.value);
+
+
+        if (passwordInputRef.current.value !== repeatPasswordInputRef.current.value) {
+            setPasswordErrorClass("");
+            return;
+        } else {
+            setPasswordErrorClass("hidden");
+        }
 
         try {
             const response = await instance.post(`/signup`, {
@@ -55,35 +59,49 @@ const Signup = () => {
             console.log(error.response.data.message);
             setErrorMsg(error.response.data.message);
 
-            setTimeout(() => {
-                setErrorMsg("");
-            }, 5000);
-
 
         }
     }
 
     return (
         <>
-            <Form onSubmit={fetchSignup}>
-                <InputGroup className="mb-3">
-                    <InputGroup.Text>First and last name</InputGroup.Text>
-                    <Form.Control required autoComplete="given-name" ref={firstNameInputRef} aria-label="First name" />
-                    <Form.Control required autoComplete="family-name" ref={lastNameInputRef} aria-label="Last name" />
-                </InputGroup>
-                <Form.Label>Email address</Form.Label>
-                <Form.Control required autoComplete="email" ref={emailInputRef} type="email" placeholder="name@example.com" />
+            <div className="signup-container">
+                <form className="form" onSubmit={fetchSignup}>
+                    <p className="title">Signup</p>
 
-                <Form.Label column sm="2">
-                    Password
-                </Form.Label>
-                <Form.Control required autoComplete="new-password" ref={passwordInputRef} type="password" placeholder="Password" />
-                <Button type='submit' variant="primary">Signup</Button>
-            </Form>
+                    <div className="flex">
+                        <label>
+                            <input required ref={firstNameInputRef} placeholder="" type="text" className="input" />
+                            <span>Firstname</span>
+                        </label>
 
-            <div>
-                <p>{result}</p>
-                <p>{errorMsg}</p>
+                        <label>
+                            <input required ref={lastNameInputRef} placeholder="" type="text" className="input" />
+                            <span>Lastname</span>
+                        </label>
+                    </div>
+
+                    <label>
+                        <input required ref={emailInputRef} placeholder="" type="email" className="input" />
+                        <span>Email</span>
+                    </label>
+
+                    <label>
+                        <input required ref={passwordInputRef} placeholder="" type="password" className="input" />
+                        <span>Password</span>
+                    </label>
+                    <label>
+                        <input required placeholder="" type="password" className="input" ref={repeatPasswordInputRef} />
+                        <span>Confirm password</span>
+                    </label>
+                    <button className="submit">Submit</button>
+                </form>
+            </div>
+            <div className="msg">
+                <p className="result" hidden={!result}>{result}</p>
+                <p className="password-error" hidden={passwordErrorClass}>Passwords do not match</p>
+
+                <p className="error-msg" hidden={!errorMsg}>{errorMsg}</p>
             </div>
         </>
     )

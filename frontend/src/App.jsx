@@ -8,14 +8,13 @@ import Signup from './pages/signup/Signup';
 import Chat from './pages/chat/Chat';
 import About from './pages/about/About';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import { Bootstrap } from 'react-bootstrap-icons';
 import { Routes, Route, Link, Navigate, Router } from "react-router-dom";
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/esm/Container';
 import { baseUrl } from './core';
 import Nav from 'react-bootstrap/Nav';
 import { GlobalContext } from './context/context';
-
+import Button from 'react-bootstrap/esm/Button';
 
 
 
@@ -25,7 +24,7 @@ const App = () => {
 
 
     const instance = axios.create({
-        baseURL: `${baseUrl}`
+        baseURL: `${baseUrl}/api`
 
     })
 
@@ -38,7 +37,7 @@ const App = () => {
 
             try {
 
-                const response = await instance.get(`/api/profile`, {
+                const response = await instance.get(`/profile`, {
                     withCredentials: true,
                 })
 
@@ -64,6 +63,21 @@ const App = () => {
 
     }, [])
 
+    const logoutHandler = async () => {
+        try {
+            const response = await instance.post(`/logout`, {}, {
+                withCredentials: true,
+            })
+
+            console.log(response.data);
+            dispatch({ type: "USER_LOGOUT" })
+        } catch (error) {
+            console.log(error);
+        }
+
+        console.log(state);
+
+    }
 
     return (
         <>
@@ -82,6 +96,9 @@ const App = () => {
                                     <Link to={`/chat`}>Admin Chat</Link>
                                     <Link to={`about`}>Admin About</Link>
                                 </Nav>
+                                <div>
+                                    <Button variant="danger" onClick={logoutHandler}> Logout</Button>
+                                </div>
                             </Container>
                         </Navbar>
 
@@ -107,12 +124,14 @@ const App = () => {
                     <>
                         <Navbar bg="primary" data-bs-theme="dark">
                             <Container>
-                                <Navbar.Brand>Navbar</Navbar.Brand>
-                                <Nav className="me-auto">
-                                    <Link to={`/`}>Home</Link>
-                                    <Link to={`/chat`}>Chat</Link>
-                                    <Link to={`about`}>About</Link>
+                                <Nav className="me-auto d-flex justify-content-evenly ">
+                                    <Link className='text-decoration-none text-light px-5' to={`/`}>Home</Link>
+                                    <Link className='text-decoration-none text-light px-5' to={`/chat`}>Chat</Link>
+                                    <Link className='text-decoration-none text-light px-5' to={`about`}>About</Link>
                                 </Nav>
+                                <div>
+                                    <Button variant="danger" onClick={logoutHandler}> Logout</Button>{' '}
+                                </div>
                             </Container>
                         </Navbar>
 
@@ -135,14 +154,14 @@ const App = () => {
             {state.isLogin === false ?
 
                 <>
-                    <nav>
-                        <ul>
+                    <nav >
+                        <ul className='list-unstyled d-flex p-2 justify-content-around'>
                             <li>
-                                <Link to={`login`}>Login</Link>
+                                <Button variant="info" ><Link className='text-light text-decoration-none' to={`login`}>Login</Link></Button>
                             </li>
 
                             <li>
-                                <Link to={`signup`}>Signup</Link>
+                                <Button variant='success'><Link className='text-light text-decoration-none' to={`signup`}>Signup</Link></Button>
                             </li>
                         </ul>
                     </nav>

@@ -96,7 +96,9 @@ const Home = () => {
         e.preventDefault()
         try {
 
-            const response = await instance.get(`/search?q=${searchInputRef.current.value}`);
+            const response = await instance.get(`/search?q=${searchInputRef.current.value}`,{
+                withCredentials: true
+            });
             console.log(response.data);
 
             setAllPosts([...response.data]);

@@ -2,10 +2,9 @@ import React from "react";
 import { useEffect, useState, useRef, useContext } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
-import Button from "react-bootstrap/esm/Button";
 import { baseUrl } from "../../core";
-import Form from 'react-bootstrap/Form';
 import { GlobalContext } from "../../context/context";
+import "./login.css"
 
 
 
@@ -22,7 +21,8 @@ const Login = () => {
 
     const emailInputRef = useRef(null);
     const passwordInputRef = useRef(null);
-
+    const [errorMsg, setErrorMsg] = useState("");
+    const [result, setResult] = useState("");
 
 
     const loginSubmitHandler = async (e) => {
@@ -44,11 +44,11 @@ const Login = () => {
             })
 
             console.log(response.data);
+            setResult(response.data.message)
 
 
         } catch (error) {
-
-            console.log(error.response.data.message)
+            setErrorMsg(error.response.data.message)
         }
 
     }
@@ -57,16 +57,31 @@ const Login = () => {
 
 
     return (
-        <Form onSubmit={loginSubmitHandler}>
-            <Form.Label>Email address</Form.Label>
-            <Form.Control ref={emailInputRef} required type="email" placeholder="name@example.com" />
+        <>
+            <div className="form-container">
 
-            <Form.Label column sm="2">
-                Password
-            </Form.Label>
-            <Form.Control ref={passwordInputRef} required type="password" placeholder="Password" />
-            <Button variant="primary" type="submit" >Login</Button>
-        </Form>
+                <form className="form" onSubmit={loginSubmitHandler}>
+                    <p className="form-title">Login to your account</p>
+                    <div className="input-container">
+                        <input ref={emailInputRef} required placeholder="Enter email" type="email" />
+
+                    </div>
+                    <div className="input-container">
+                        <input ref={passwordInputRef} required placeholder="Enter password" type="password" />
+
+
+                    </div>
+                    <button className="submit" type="submit">
+                        Sign in
+                    </button>
+                </form>
+
+
+            </div>
+            <div className="msg">
+                <p className="error-msg" hidden={!errorMsg}>{errorMsg}</p>
+            </div>
+        </>
     )
 }
 
