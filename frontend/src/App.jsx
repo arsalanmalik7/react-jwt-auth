@@ -184,7 +184,7 @@ const App = () => {
             {
                 state.isLogin === null ?
                     (
-                        <div>Loading...</div>
+                    <span class="loader"></span>
                     )
                     :
                     null
